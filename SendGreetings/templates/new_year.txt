@@ -1,4 +1,4 @@
-Hi {0},
+Hi {0} {1},
 Wishing you and your family to have a never ending happiness and prosperity. More blessings to come this coming new year. Happy new year !!
 
 Best Wishes
