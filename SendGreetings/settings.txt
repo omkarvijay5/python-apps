@@ -1,0 +1,4 @@
+from_email your_email
+password password
+template templates/new_year.txt
+subject subject
