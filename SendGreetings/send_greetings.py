@@ -5,14 +5,14 @@ import csv
 from email.mime.text import MIMEText
 
 """
-send_greetings is a small python app which was developed to make ease in sending
-greetings for each and every occassion to a bunch of emails.
+send_greetings is a small python app which was developed to make ease in
+sending greetings for each and every occassion to a bunch of emails.
 
 The app expects few things to be in right place before executing.
 Only thing you need to configure is the settings.txt file which has from_email
 and password which should be given properly
-Dont forget to turn on 
-    https://www.google.com/settings/security/lesssecureapps 
+Dont forget to turn on
+    https://www.google.com/settings/security/lesssecureapps
 for your gmail account Thats it ..!!!
 """
 # Email regex validation
@@ -46,7 +46,8 @@ class Greeting(object):
 
     def config_smtp_server(self):
         """
-        SMTP configuration for sending email. Authentication Check for the specified email
+        SMTP configuration for sending email. Authentication Check for the
+        specified email
         """
         server = smtplib.SMTP(SERVER, PORT)
         server.starttls()
@@ -58,8 +59,8 @@ class Greeting(object):
 
     def send_email(self):
         """
-        Reads email ids from contacts.csv and users from csv file. Composes individual message
-        and sends greetings to individual
+        Reads email ids from contacts.csv and users from csv file. Composes
+        individual message and sends greetings to individual
         """
         server = self.config_smtp_server()
         contacts = open('contacts.csv', 'rb')
@@ -76,7 +77,7 @@ class Greeting(object):
         """
         email = self.settings['from_email']
         if EMAIL_REGEX.match(email) is None:
-            print "Entered email is not a valid Email. Please enter proper email"
+            print "Invalid Email entered. Please enter proper email"
             exit(1)
         return email
 
