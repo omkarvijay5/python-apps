@@ -67,7 +67,7 @@ class Greeting(object):
         for person_details in reader:
             to_email = person_details['email']
             message = self.compose_message(person_details).as_string()
-            # server.sendmail(self.settings['from_email'], [to_email], message)
+            server.sendmail(self.settings['from_email'], [to_email], message)
         server.quit()
 
     def validate_email(self):
