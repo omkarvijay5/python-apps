@@ -113,35 +113,23 @@ class PdfParserProvider:
     """
     def _get_text(self, parser_obj, pdf_aggregator_obj):
         temporary_text = []
-        temporary_text_1 = []
-        temporary_horizontal_table_1 = {}
-        temporary_horizontal_table_2 = {}
-        temporary_vertical_table = {}
+        temporary_horizontal_table = {}
         layout = pdf_aggregator_obj.get_result()
         for layout_obj in layout:
             if isinstance( layout_obj, LTTextBoxHorizontal ):
                 if layout_obj.get_text().strip():
                     temporary_text.append( TextBlock(layout_obj.x0, layout_obj.y1, layout_obj.get_text().strip()) )
-                    if layout_obj.y1 in temporary_horizontal_table_1.keys():
-                        #parser_obj.horizontal_tables[temporary_horizontal_table[layout_obj.y1]] = layout_obj.get_text().strip()   
-                        #parser_obj.horizontal_tables[layout_obj.get_text().strip()] = parser_obj.temporary_horizontal_table[layout_obj.y1]
-                        temporary_horizontal_table_2[layout_obj.y1] = layout_obj.get_text().strip()
+                    #TODO: Not the pythonic way to write the code
+                    #Need to fix it
+                    if layout_obj.y1 in temporary_horizontal_table.keys():
+                        temporary_horizontal_table[layout_obj.y1].append(layout_obj.get_text().strip())
                     else:
-                        temporary_horizontal_table_1[layout_obj.y1] = layout_obj.get_text().strip()
-    
+                        temporary_horizontal_table[layout_obj.y1] = [layout_obj.get_text().strip()]
 
-        for key, value in temporary_horizontal_table_1.iteritems():
-            print key, "\t", value.rstrip(), "\t"
-            if key in temporary_horizontal_table_2.keys():
-                print temporary_horizontal_table_2[key].strip()
-            else:
-                print "Blank"
-            print "\n"
+        for key, value in temporary_horizontal_table.iteritems():
+            print key, "\t", value, "\t"
 
-            #    temporary_text.append(layout_obj.get_text().strip())
-            #if isinstance( layout_obj, LTTextBoxVertical ):
-            #    temporary_text_1.append(layout_obj.get_text().strip())
-            temporary_text.sort( key=lambda row: (-row.x, row.y) )
+        temporary_text.sort( key=lambda row: (-row.x, row.y) )
         return temporary_text
 
     def _build_annotations( self, parser_obj, page ):
@@ -171,17 +159,6 @@ def run_pdf_parser():
     provider_object.load_pdf_file(parser_object)
     for i in parser_object.parsed_output_text:
     	print parser_object.parsed_output_text.values()
-    #print parser_object.parsed_output_text
-    
-    #for i in parser_object.horizontal_tables
-    #    print parser_object.horizontal_tables.keys(i), "\t" , parser_object.horizontal_tables.values(i)
-    #for key, value in parser_object.temporary_horizontal_table_2.iteritems():
-    #    print key, "\t", value, "\t"
-    #    if key in parser_object.temporary_horizontal_table_1.keys():
-    #        print parser_object.temporary_horizontal_table_1[key]
-    #    else:
-    #        print "Blank"
-        #print "\n"
 
 if __name__ == "__main__":
     run_pdf_parser()
