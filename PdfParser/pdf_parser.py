@@ -48,8 +48,7 @@ class PdfParser:
         #self.parsed_output_text = conf.get("parsed_output_text", \  
         #                        DEFAULTS["parsed_output_text"])
 
-        #self.parsed_output_text = conf.get("parsed_output_text", \
-        #                          DEFAULTS["parsed_output_text"])
+        #Initialize output text as key value pairs
 
         self.parsed_output_text = {}
         # Innitializing the input PDF file
@@ -57,13 +56,6 @@ class PdfParser:
                               DEFAULTS["input_pdf_file"])
 
         self.horizontal_tables = {}
-
-        # Number of pages in the document
-        # self.number_of_pages = conf.get("number_of_pages", \
-        #                       DEFAULTS["number_of_pages"])
-        
-        #TODO : Not a good design to include temporary tables in Parser object
-        #Need to fix this. 
     
 
 class PdfParserProvider:
@@ -149,6 +141,7 @@ class PdfParserProvider:
             #    temporary_text.append(layout_obj.get_text().strip())
             #if isinstance( layout_obj, LTTextBoxVertical ):
             #    temporary_text_1.append(layout_obj.get_text().strip())
+            temporary_text.sort( key=lambda row: (-row.x, row.y) )
         return temporary_text
 
     def _build_annotations( self, parser_obj, page ):
