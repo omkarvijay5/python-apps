@@ -90,7 +90,8 @@ class PdfParserProvider:
         laparams = LAParams(detect_vertical=True, all_texts=True)
       
         #Create PDF aggregator object
-        pdf_aggregator_obj = PDFPageAggregator(resource_manager_obj, laparams=laparams)
+        pdf_aggregator_obj = PDFPageAggregator(resource_manager_obj, \
+                                                  laparams=laparams)
 
         # Create a PDF interpreter object.
         interpreter_obj = PDFPageInterpreter(resource_manager_obj, \
