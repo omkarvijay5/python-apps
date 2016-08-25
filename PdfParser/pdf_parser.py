@@ -17,7 +17,7 @@ from collections import defaultdict, namedtuple
 # default configuration dictionary which will be initialized when
 # PdfParser objects are created
 
-DEFAULTS = {"input_pdf_file": "inputfile.pdf",
+DEFAULTS = {"input_pdf_file": "inputfile1.pdf",
             #"parsed_output_text" : "hello",
             }
 
@@ -118,13 +118,16 @@ class PdfParserProvider:
         for layout_obj in layout:
             if isinstance( layout_obj, LTTextBoxHorizontal ):
                 if layout_obj.get_text().strip():
-                    temporary_text.append( TextBlock(layout_obj.x0, layout_obj.y1, layout_obj.get_text().strip()) )
+                    temporary_text.append( TextBlock(layout_obj.x0, \
+                            layout_obj.y1, layout_obj.get_text().strip()) )
                     #TODO: Not the pythonic way to write the code
                     #Need to fix it
                     if layout_obj.y1 in temporary_horizontal_table.keys():
-                        temporary_horizontal_table[layout_obj.y1].append(layout_obj.get_text().strip())
+                        temporary_horizontal_table[layout_obj.y1].append( \
+                                layout_obj.get_text().strip())
                     else:
-                        temporary_horizontal_table[layout_obj.y1] = [layout_obj.get_text().strip()]
+                        temporary_horizontal_table[layout_obj.y1] = \
+                        [layout_obj.get_text().strip()]
 
         for key, value in temporary_horizontal_table.iteritems():
             print key, "\t", value, "\t"
