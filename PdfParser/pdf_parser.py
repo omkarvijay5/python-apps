@@ -18,7 +18,6 @@ from collections import defaultdict, namedtuple
 # PdfParser objects are created
 
 DEFAULTS = {"input_pdf_file": "inputfile.pdf",
-            #"parsed_output_text" : "hello",
             }
 
 # dictionary of configured values
@@ -134,8 +133,6 @@ class PdfParserProvider:
             page_text = self._get_text(parser_obj, pdf_aggregator_obj)
             #TODO: Need to copy the data into parsed_output_text variable
             parser_obj.parsed_output_text[page_num + 1] = page_text
-            #parser_obj.parsed_output_text.append(page_text)
-            #print page_text
        
     """
     To fetch the text from the pdf_aggregator_obj
