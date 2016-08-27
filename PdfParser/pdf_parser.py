@@ -91,8 +91,6 @@ class PdfParserProvider:
     """
     def load_pdf_file(self,parser_obj):
 
-    	print parser_obj.input_pdf_file
-        print parser_obj.parsed_output_text
         # Open the PDF file 
     	file_obj = open(parser_obj.input_pdf_file,'rb')
         
@@ -166,45 +164,83 @@ class PdfParserProvider:
         temporary_text.sort( key=lambda row: (row.x, -row.y) )
         return temporary_text
 
+    """
+    Finds index in a string containing company records
+    """
+    def find_index(self,parser_obj,input_text,input_list):
+        #print "input_text", input_text
+        #print "input_list", input_list
+        input_index = input_list.index(input_text)
+        #print "input_index", input_index
+        if input_index:
+            return 0
+        else:
+            return 1
+
 
     """
     Populates records in company records table
     """
     def populate_company_record_table(self,parser_obj,temporary_horizontal_table):
         for key, value in temporary_horizontal_table.iteritems():
+            #Print statements for debug
             #print key, "\t", value, "\t"
+            if ':' in value:
+                value.remove(':')
+
+            if (len(value) == 1):
+                value.append('')
+
             if 'Registration No.' in value:
-                parser_obj.company_record['registration_no'] = value[0]
+                index = self.find_index(parser_obj,'Registration No.',value)
+                parser_obj.company_record['registration_no'] = value[index]
             elif 'Company Name.' in value:
-                parser_obj.company_record['company_name'] = value[0]
+                index = self.find_index(parser_obj,'Company Name.',value)
+                parser_obj.company_record['company_name'] = value[index]
             elif 'Former Name if any' in value:
-                parser_obj.company_record['former_name'] = value[0]
+                index = self.find_index(parser_obj,'Former Name if any',value)
+                parser_obj.company_record['former_name'] = value[index]
             elif 'Incorporation Date.' in value:
-                parser_obj.company_record['incorp_date'] = value[0]
+                index = self.find_index(parser_obj,'Incorporation Date.',value)
+                parser_obj.company_record['incorp_date'] = value[index]
             elif 'Company Type' in value:
-                parser_obj.company_record['company_type'] = value[0]
+                index = self.find_index(parser_obj,'Company Type',value)
+                parser_obj.company_record['company_type'] = value[index]
             elif 'Status' in value:
-                parser_obj.company_record['status'] = value[0]
+                index = self.find_index(parser_obj,'Status',value)
+                parser_obj.company_record['status'] = value[index]
             elif 'Status Date' in value:
-                parser_obj.company_record['status_date'] = value[0]
+                index = self.find_index(parser_obj,'Status Date',value)
+                parser_obj.company_record['status_date'] = value[index]
             elif 'Activities (I)' in value:
-                parser_obj.company_record['activities_1'] = value[0]
+                index = self.find_index(parser_obj,'Activities (I)',value)
+                parser_obj.company_record['activities_1'] = value[index]
             elif 'Activities (II)' in value:
-                parser_obj.company_record['activities_2'] = value[0]
-            elif 'Description' in value:
-                parser_obj.company_record['activities_description'] = value[0]
+                index = self.find_index(parser_obj,'Activities (II)',value)
+                parser_obj.company_record['activities_2'] = value[index]
+            elif ('Description' in value) and (len(value)==1):
+                parser_obj.company_record['activities_description'] = ''
+            elif ('Description' in value) and (len(value)>1):
+                index = self.find_index(parser_obj,'Description',value)
+                parser_obj.company_record['activities_description'] = value[index]
             elif 'Registered Office Address' in value:
-                parser_obj.company_record['registered_office_address'] = value[0]
+                index = self.find_index(parser_obj,'Registered Office Address',value)
+                parser_obj.company_record['registered_office_address'] = value[index]
             elif 'Date of Address' in value:
-                parser_obj.company_record['date_of_address'] = value[0]
+                index = self.find_index(parser_obj,'Date of Address', value)
+                parser_obj.company_record['date_of_address'] = value[index]
             elif 'Date of Last AGM' in value:
-                parser_obj.company_record['date_of_last_agm'] = value[0]
+                index = self.find_index(parser_obj,'Date of Last AGM',value)
+                parser_obj.company_record['date_of_last_agm'] = value[index]
             elif 'Date of Last AR' in value:
-                parser_obj.company_record['date_of_last_ar'] = value[0]
+                index = self.find_index(parser_obj,'Date of Last AR',value)
+                parser_obj.company_record['date_of_last_ar'] = value[index]
             elif 'Date of A/C Laid at Last AGM' in value:
-                parser_obj.company_record['date_of_ac_at_last'] = value[0]
+                index = self.find_index(parser_obj,'Date of A/C Laid at Last AGM',value)
+                parser_obj.company_record['date_of_ac_at_last'] = value[index]
             elif 'Date of Lodgment of AR, A/C' in value:
-                parser_obj.company_record['date_of_lodgment_of_ar'] = value[0]
+                index = self.find_index(parser_obj,'Date of Lodgment of AR, A/C',value)
+                parser_obj.company_record['date_of_lodgment_of_ar'] = value[index]
 
 
 
