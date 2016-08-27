@@ -17,7 +17,7 @@ from collections import defaultdict, namedtuple
 # default configuration dictionary which will be initialized when
 # PdfParser objects are created
 
-DEFAULTS = {"input_pdf_file": "inputfile.pdf",
+DEFAULTS = {"input_pdf_file": "inputfile3.pdf",
             }
 
 # dictionary of configured values
@@ -79,6 +79,15 @@ class PdfParser:
                 'audit_firm_name':'',
                 'organization':'',
             }
+
+        self.charges = [{
+                'id':'',
+                'charge_no':'',
+                'date_registered':'',
+                'currency':'',
+                'amount_secured':'',
+                'charge_org':'',
+            }]
     
 
 class PdfParserProvider:
@@ -158,8 +167,15 @@ class PdfParserProvider:
 
         #Appending the key value pairs in the dictionary
         self.populate_company_record_table(parser_obj,temporary_horizontal_table)
-        temporary_text.sort( key=lambda row: (row.x, -row.y) )
+        self.populate_charges_record_table(parser_obj,temporary_horizontal_table)
+        #temporary_text.sort( key=lambda row: (row.x, -row.y) )
         return temporary_text
+
+    """
+    Populate the table containing charges
+    """
+    def populate_charges_record_table(self,parser_obj,temporary_horizontal_table):
+        print "hello"
 
     """
     Finds index in a string containing company records
@@ -181,7 +197,7 @@ class PdfParserProvider:
     def populate_company_record_table(self,parser_obj,temporary_horizontal_table):
         for key, value in temporary_horizontal_table.iteritems():
             #Print statements for debug
-            #print key, "\t", value, "\t"
+            print key, "\t", value, "\t"
             if ':' in value:
                 value.remove(':')
 
