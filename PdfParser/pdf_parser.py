@@ -44,9 +44,6 @@ class PdfParser:
         """
 
         # Where all the output text from the pdf parser is stored. 
-        #self.parsed_output_text = conf.get("parsed_output_text", \  
-        #                        DEFAULTS["parsed_output_text"])
-
         #Initialize output text as key value pairs
 
         self.parsed_output_text = {}
