@@ -17,7 +17,7 @@ from collections import defaultdict, namedtuple
 # default configuration dictionary which will be initialized when
 # PdfParser objects are created
 
-DEFAULTS = {"input_pdf_file": "inputfile1.pdf",
+DEFAULTS = {"input_pdf_file": "inputfile.pdf",
             #"parsed_output_text" : "hello",
             }
 
@@ -55,7 +55,34 @@ class PdfParser:
         self.input_pdf_file = conf.get("input_pdf_file",  \
                               DEFAULTS["input_pdf_file"])
 
-        self.horizontal_tables = {}
+        #self.horizontal_tables = {}
+        #initializing all the fields as blank for now
+        self.company_record = {
+                'id':'',
+                'description':'',
+                'date_uploaded': '',
+                'bizfile_date':'',
+                'receipt_no' : '',
+                'registration_no':'',
+                'company_name': '',
+                'former_name':'',
+                'incorp_date':'',
+                'company_type':'',
+                'status': '',
+                'status_date':'',
+                'activities_1':'',
+                'activites_description':'',
+                'activities_2':'',
+                'activites_description_2':'',
+                'registered_office_address':'',
+                'date_of_address':'',
+                'date_of_last_agm':'',
+                'date_of_last_ar':'',
+                'date_of_ac_at_last':'',
+                'date_of_lodgment_of_ar':'',
+                'audit_firm_name':'',
+                'organization':'',
+            }
     
 
 class PdfParserProvider:
@@ -89,6 +116,7 @@ class PdfParserProvider:
         #Set parameters for analysis
         laparams = LAParams(detect_vertical=True, all_texts=True)
       
+        #laparams = LAParams(detect_vertical=True,line_margin=0.3)
         #Create PDF aggregator object
         pdf_aggregator_obj = PDFPageAggregator(resource_manager_obj, \
                                                   laparams=laparams)
@@ -126,15 +154,62 @@ class PdfParserProvider:
                     if layout_obj.y1 in temporary_horizontal_table.keys():
                         temporary_horizontal_table[layout_obj.y1].append( \
                                 layout_obj.get_text().strip())
+                    elif (layout_obj.y1 + 4) in temporary_horizontal_table.keys():
+                        temporary_horizontal_table[layout_obj.y1 + 4].append( \
+                                layout_obj.get_text().strip())
+                    elif (layout_obj.y1 - 4) in temporary_horizontal_table.keys():
+                        temporary_horizontal_table[layout_obj.y1 - 4].append( \
+                                layout_obj.get_text().strip())
                     else:
                         temporary_horizontal_table[layout_obj.y1] = \
                         [layout_obj.get_text().strip()]
 
-        for key, value in temporary_horizontal_table.iteritems():
-            print key, "\t", value, "\t"
-
-        temporary_text.sort( key=lambda row: (-row.x, row.y) )
+        #Appending the key value pairs in the dictionary
+        self.populate_company_record_table(parser_obj,temporary_horizontal_table)
+        temporary_text.sort( key=lambda row: (row.x, -row.y) )
         return temporary_text
+
+
+    """
+    Populates records in company records table
+    """
+    def populate_company_record_table(self,parser_obj,temporary_horizontal_table):
+        for key, value in temporary_horizontal_table.iteritems():
+            #print key, "\t", value, "\t"
+            if 'Registration No.' in value:
+                parser_obj.company_record['registration_no'] = value[0]
+            elif 'Company Name.' in value:
+                parser_obj.company_record['company_name'] = value[0]
+            elif 'Former Name if any' in value:
+                parser_obj.company_record['former_name'] = value[0]
+            elif 'Incorporation Date.' in value:
+                parser_obj.company_record['incorp_date'] = value[0]
+            elif 'Company Type' in value:
+                parser_obj.company_record['company_type'] = value[0]
+            elif 'Status' in value:
+                parser_obj.company_record['status'] = value[0]
+            elif 'Status Date' in value:
+                parser_obj.company_record['status_date'] = value[0]
+            elif 'Activities (I)' in value:
+                parser_obj.company_record['activities_1'] = value[0]
+            elif 'Activities (II)' in value:
+                parser_obj.company_record['activities_2'] = value[0]
+            elif 'Description' in value:
+                parser_obj.company_record['activities_description'] = value[0]
+            elif 'Registered Office Address' in value:
+                parser_obj.company_record['registered_office_address'] = value[0]
+            elif 'Date of Address' in value:
+                parser_obj.company_record['date_of_address'] = value[0]
+            elif 'Date of Last AGM' in value:
+                parser_obj.company_record['date_of_last_agm'] = value[0]
+            elif 'Date of Last AR' in value:
+                parser_obj.company_record['date_of_last_ar'] = value[0]
+            elif 'Date of A/C Laid at Last AGM' in value:
+                parser_obj.company_record['date_of_ac_at_last'] = value[0]
+            elif 'Date of Lodgment of AR, A/C' in value:
+                parser_obj.company_record['date_of_lodgment_of_ar'] = value[0]
+
+
 
     def _build_annotations( self, parser_obj, page ):
         for annot in page.annots.resolve():
@@ -161,9 +236,10 @@ def run_pdf_parser():
     parser_object = PdfParser(conf)
     provider_object = PdfParserProvider()
     provider_object.load_pdf_file(parser_object)
-    for i in parser_object.parsed_output_text:
-    	print parser_object.parsed_output_text.values()
-
+    #for i in parser_object.parsed_output_text:
+    #	print parser_object.parsed_output_text.values()
+    for key, value in parser_object.company_record.iteritems():
+        print key, "\t", value
 if __name__ == "__main__":
     run_pdf_parser()
 
